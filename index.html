@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>JasperGYM</title>
+
+<style>
+:root{
+  --bg:#91C6FF; --panel:#fff; --ink:#0f172a;
+  --muted:#64748b; --brand:#2563eb; --border:#d1d5db;
+}
+
+/* 全局基础 */
+body{
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC";
+  background:var(--bg); color:var(--ink);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+
+/* ================= 顶部两排按钮区域 ================= */
+.headerbar{
+  display:grid; gap:12px;
+}
+
+/* 两排容器：四等分网格 */
+.leftgrp, #tabs{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  width:100%;
+}
+
+/* 顶部按钮基础样式：两排通用 */
+.gbtn{
+  appearance:none;
+  background:#fff;
+  color:#111;
+  border:1px solid var(--border);
+  border-radius:999px;
+  height:44px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:14px;
+  padding:0 10px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.gbtn:hover{background:#f8fafc}
+.gbtn:active{transform:translateY(1px)}
+.gbtn[disabled]{opacity:.55;cursor:not-allowed}
+
+/* 手机端自适应：两排一致 */
+@media(max-width:768px){
+  .leftgrp, #tabs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+  }
+}
+
+/* 页面卡片布局 */
+.card{
+  background:var(--panel);
+  border-radius:16px;
+  border:1px solid var(--border);
+  padding:16px;
+  margin-top:20px;
+}
+
+/* 输入区 */
+.field{
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid var(--border);
+  border-radius:12px;padding:8px 12px;min-height:40px;
+}
+input,select,textarea{width:100%;border:0;outline:none;font:inherit;color:inherit;background:transparent}
+.hide{display:none!important}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="headerbar">
+
+      <!-- 第一排：云端功能，仅 4 个按钮 -->
+      <div class="leftgrp">
+        <button class="gbtn" id="btnLoad" disabled>云端读取</button>
+        <button class="gbtn" id="btnSave" disabled>云端保存</button>
+        <button class="gbtn" id="btnReadJson">读取JSON</button>
+        <button class="gbtn" id="btnSaveJson">保存JSON</button>
+        <input type="file" id="jsonFilePicker" class="hide" accept=".json"/>
+      </div>
+
+      <!-- 第二排：主导航按钮 -->
+      <div class="leftgrp" id="tabs">
+        <button class="gbtn navbtn active" data-page="home">🏠 首页</button>
+        <button class="gbtn navbtn" data-page="work">💪 训练</button>
+        <button class="gbtn navbtn" data-page="logs">📘 日志</button>
+        <button class="gbtn navbtn" data-page="settings">⚙️ 设置</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 首页 ============ -->
+  <div id="page-home" class="card">
+    <div class="field">
+      <input placeholder="示例输入框"/>
+    </div>
+    <button class="gbtn" id="goWork">进入训练页</button>
+  </div>
+
+  <!-- ============ 训练页 ============ -->
+  <div id="page-work" class="card hide">
+    <div class="field"><input placeholder="训练标题"/></div>
+    <div class="field"><input placeholder="视频URL"/></div>
+    <button class="gbtn">添加视频</button>
+  </div>
+
+  <!-- ============ 日志页 ============ -->
+  <div id="page-logs" class="card hide">
+    <div class="field"><input placeholder="日志标题"/></div>
+    <textarea style="width:100%;min-height:100px;border-radius:12px;padding:8px;"></textarea>
+    <button class="gbtn">保存日志</button>
+  </div>
+
+  <!-- ============ 设置页 ============ -->
+  <div id="page-settings" class="card hide">
+    <div class="field"><input placeholder="Worker 地址"/></div>
+    <button class="gbtn">验证配置</button>
+  </div>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function showPage(name){
+  ['home','work','logs','settings'].forEach(p=>{
+    const el=$('page-'+p);
+    if(el) el.classList.toggle('hide',p!==name);
+  });
+  document.querySelectorAll('#tabs .gbtn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.page===name);
+  });
+}
+document.querySelectorAll('#tabs .gbtn').forEach(b=>{
+  b.addEventListener('click',()=>showPage(b.dataset.page));
+});
+$('goWork')?.addEventListener('click',()=>showPage('work'));
+</script>
+
+</body>
+</html>
